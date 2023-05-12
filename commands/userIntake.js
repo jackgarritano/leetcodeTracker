@@ -12,6 +12,7 @@ module.exports = {
 	async execute(interaction) {
         const usertag = interaction.user.tag;
         const username = interaction.options.getString('username');
+        console.log(`username: ${username}`);
         try{
             replyStr = await initUser(usertag, username);
             await interaction.reply(replyStr);
