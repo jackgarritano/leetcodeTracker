@@ -1,19 +1,24 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 const UsersModel = require('./UsersModel');
-const {fetchUserData} = require('../leetCode/userData');
+const { fetchUserData } = require('../leetCode/userData');
 
 mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-    console.log('Connected to MongoDB');
+        console.log('Connected to MongoDB');
     })
     .catch(err => {
-    console.error('Error connecting to MongoDB', err);
+        console.error('Error connecting to MongoDB', err);
     });
 
-async function initUser(discordTag, lcUser){
+async function checkUserExistence(discordTag){
+    const doc = await UsersModel.findOne({ tag: discordTag });
+    return doc != null;
+}
+
+async function initUser(discordTag, lcUser) {
     const userData = await fetchUserData(lcUser);
-    if(userData.status == 'error'){
+    if (userData.status == 'error') {
         throw new Error(userData.message);
     }
 
@@ -25,16 +30,16 @@ async function initUser(discordTag, lcUser){
         hard: userData.hardSolved
     }
 
-    try{
+    try {
         await SomeModel.findOneAndUpdate({ tag: discordTag }, doc, { new: true, upsert: true });
         return `User successfully updated to ${lcUser}`;
     }
-    catch(e){
+    catch (e) {
         return e;
     }
 }
 
-async function checkUsers(){
+async function checkUsers() {
     finishedProblems = {};
     allDocs = await UsersModel.find();
     allDocs.forEach(async (doc) => {
@@ -42,36 +47,38 @@ async function checkUsers(){
         easyFinished = currentData.easySolved - doc.easy;
         medFinished = currentData.mediumSolved - doc.med;
         hardFinished = currentData.hardSolved - doc.hard;
-        if(easyFinished > 0){
+        if (easyFinished > 0) {
             finishedProblems[doc.tag] = `${easyFinished} easy problem`;
-            if(easyFinished > 1){
+            if (easyFinished > 1) {
                 finishedProblems[doc.tag] += 's';
             }
         }
-        if(medFinished > 0){
-            if(finishedProblems[doc.tag].length() > 0){
+        if (medFinished > 0) {
+            if (finishedProblems[doc.tag].length() > 0) {
                 finishedProblems[doc.tag] += ', ';
             }
-            else{
+            else {
                 finishedProblems[doc.tag] = '';
             }
             finishedProblems[doc.tag] += `${medFinished} medium problem`;
-            if(medFinished > 1){
+            if (medFinished > 1) {
                 finishedProblems[doc.tag] += 's';
             }
         }
-        if(hardFinished > 0){
-            if(finishedProblems[doc.tag].length() > 0){
+        if (hardFinished > 0) {
+            if (finishedProblems[doc.tag].length() > 0) {
                 finishedProblems[doc.tag] += ', ';
             }
-            else{
+            else {
                 finishedProblems[doc.tag] = '';
             }
             finishedProblems[doc.tag] += `${hardFinished} hard problem`;
-            if(hardFinished > 1){
+            if (hardFinished > 1) {
                 finishedProblems[doc.tag] += 's';
             }
         }
     })
     return finishedProblems;
 }
+
+module.exports = { checkUserExistence, initUser, checkUsers };

@@ -90,7 +90,7 @@ async function generateUserProfile(user) {
         </g>
       </svg>
       `
-        imageBuffer = await sharp(Buffer.from(svg))
+        imageBuffer = await sharp(Buffer.from(profile))
             .resize(1000)
             .png()
             .toBuffer()
@@ -122,4 +122,6 @@ async function generateUserProfile(user) {
 
 testSharp('jackgar');*/
 
-module.exports = { fetchUserData };
+generateUserProfile('jackgar');
+
+module.exports = { fetchUserData, generateUserProfile };
