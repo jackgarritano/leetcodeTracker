@@ -27,9 +27,51 @@ async function initUser(discordTag, lcUser){
 
     try{
         await SomeModel.findOneAndUpdate({ tag: discordTag }, doc, { new: true, upsert: true });
-        return 'User updated successfully!';
+        return `User successfully updated to ${lcUser}`;
     }
     catch(e){
         return e;
     }
+}
+
+async function checkUsers(){
+    finishedProblems = {};
+    allDocs = await UsersModel.find();
+    allDocs.forEach(async (doc) => {
+        currentData = await fetchUserData(doc.user);
+        easyFinished = currentData.easySolved - doc.easy;
+        medFinished = currentData.mediumSolved - doc.med;
+        hardFinished = currentData.hardSolved - doc.hard;
+        if(easyFinished > 0){
+            finishedProblems[doc.tag] = `${easyFinished} easy problem`;
+            if(easyFinished > 1){
+                finishedProblems[doc.tag] += 's';
+            }
+        }
+        if(medFinished > 0){
+            if(finishedProblems[doc.tag].length() > 0){
+                finishedProblems[doc.tag] += ', ';
+            }
+            else{
+                finishedProblems[doc.tag] = '';
+            }
+            finishedProblems[doc.tag] += `${medFinished} medium problem`;
+            if(medFinished > 1){
+                finishedProblems[doc.tag] += 's';
+            }
+        }
+        if(hardFinished > 0){
+            if(finishedProblems[doc.tag].length() > 0){
+                finishedProblems[doc.tag] += ', ';
+            }
+            else{
+                finishedProblems[doc.tag] = '';
+            }
+            finishedProblems[doc.tag] += `${hardFinished} hard problem`;
+            if(hardFinished > 1){
+                finishedProblems[doc.tag] += 's';
+            }
+        }
+    })
+    return finishedProblems;
 }
