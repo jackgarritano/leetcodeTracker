@@ -35,7 +35,7 @@ async function initUser(discordTag, lcUser) {
         return `User successfully updated to ${lcUser}`;
     }
     catch (e) {
-        return e;
+        return `Username could not be saved: ${e}`;
     }
 }
 
