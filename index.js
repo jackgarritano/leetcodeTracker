@@ -4,7 +4,12 @@ const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { getChannel, repeatingCheckUsers } = require('./utils/repeatingChecker');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [
+	GatewayIntentBits.Guilds,
+	GatewayIntentBits.GuildMessages,
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMembers,
+] });
 
 client.commands = new Collection();
 
@@ -49,7 +54,10 @@ client.once(Events.ClientReady, c => {
 });
 
 //make sure this line is the last line
-client.login(process.env.CLIENT_TOKEN); //login bot using token
+client.login(process.env.CLIENT_TOKEN).then(()=>{
+	getChannel(client).then((channel) =>{
+	repeatingCheckUsers(client, channel, 30);
+})
+})
 
-const channel = getChannel(client);
-repeatingCheckUsers(client, channel, 30);
+

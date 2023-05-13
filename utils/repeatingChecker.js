@@ -1,20 +1,21 @@
-const { checkUsers } = require('./mongoose/dbOperations');
-const { finished } = require('stream');
+const { initUser, checkUsers } = require('./mongoose/dbOperations');
 
-function getChannel(client){
-    const channel = client.channels.cache.get('1106759225734082580');
+async function getChannel(client){
+    const channel = await client.channels.fetch('1106428718857068607');
     return channel;
 }
 
 async function repeatingCheckUsers(client, channel, increment){
     setInterval(async () =>{
         let finishedProblems = await checkUsers();
-        console.log('finishedProblems in repeating: ' + JSON.stringify(finishedProblems));
-        if(finishedProblems.length > 0){
-            for (const [, cachedUser] of client.users.cache) {
-                console.log('cachedUser tag: ' + cachedUser.tag);
-                if (cachedUser.tag in finishedProblems) {
-                    channel.send(`<@${cachedUser.id}> did ${finishedProblems[cachedUser.tag]}`);
+        if(Object.keys(finishedProblems).length > 0){
+            const guild = client.guilds.cache.get('1106428718857068604'); // replace with your guild ID
+            await guild.members.fetch();
+
+            for (const [, cachedUser] of guild.members.cache) {
+                if (cachedUser.user.tag in finishedProblems) {
+                    channel.send(`<@${cachedUser.id}> did ${finishedProblems[cachedUser.user.tag]}`);
+                    await initUser(cachedUser.user.tag);
                 }
             }
         }
