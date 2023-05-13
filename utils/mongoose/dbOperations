@@ -14,7 +14,7 @@ mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true, useU
 async function checkUserExistence(discordTag){
     const doc = await UsersModel.findOne({ tag: discordTag });
     if(doc == null){
-        throw new Error(`You haven't linked a leetCode account. Use /user to do that first.`)
+        throw new Error(`There is no linked a leetCode account for this user. Use /user to do that first.`);
     }
     return doc.user;
 }
