@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageAttachment } = require("discord.js");
+const { SlashCommandBuilder, AttachmentBuilder } = require("discord.js");
 const { checkUserExistence } = require('../utils/mongoose/dbOperations');
 const { generateUserProfile } = require('../utils/leetCode/userData');
 
@@ -11,7 +11,7 @@ module.exports = {
         try{
             const username = await checkUserExistence(usertag);
             const pngBuffer = await generateUserProfile(username);
-            const attachment = new MessageAttachment(pngBuffer, 'image.png');
+            const attachment = new AttachmentBuilder(pngBuffer, {name: 'profile.png'});
             await interaction.reply({files: [attachment]});
         }
         catch(e){

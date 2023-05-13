@@ -57,7 +57,7 @@ async function checkUsers() {
             }
         }
         if (medFinished > 0) {
-            if (finishedProblems[doc.tag].length() > 0) {
+            if (finishedProblems[doc.tag].length > 0) {
                 finishedProblems[doc.tag] += ', ';
             }
             else {
@@ -69,7 +69,7 @@ async function checkUsers() {
             }
         }
         if (hardFinished > 0) {
-            if (finishedProblems[doc.tag].length() > 0) {
+            if (finishedProblems[doc.tag].length > 0) {
                 finishedProblems[doc.tag] += ', ';
             }
             else {
