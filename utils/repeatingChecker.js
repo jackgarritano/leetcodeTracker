@@ -1,14 +1,18 @@
-const { Client } = require('discord.js');
 const { checkUsers } = require('./mongoose/dbOperations');
 const { finished } = require('stream');
 
-const channel = Client.channels.cache.get('1106759225734082580');
+function getChannel(client){
+    const channel = client.channels.cache.get('1106759225734082580');
+    return channel;
+}
 
-async function repeatingCheckUsers(increment){
+async function repeatingCheckUsers(client, channel, increment){
     setInterval(async () =>{
+        console.log('next check started');
         let finishedProblems = await checkUsers();
         if(finishedProblems.length > 0){
-            for (const [, cachedUser] of Client.users.cache) {
+            for (const [, cachedUser] of client.users.cache) {
+                console.log(`tag: ${cachedUser.tag}`);
                 if (cachedUser.tag in finishedProblems) {
                     channel.send(`<@${cachedUser.id}> did ${finishedProblems[cachedUser.tag]}`);
                 }
@@ -17,4 +21,4 @@ async function repeatingCheckUsers(increment){
     }, increment * 1000)
 }
 
-module.exports = { repeatingCheckUsers };
+module.exports = { getChannel, repeatingCheckUsers };

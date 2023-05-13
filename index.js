@@ -2,6 +2,7 @@ require('dotenv').config(); //initialize dotenv
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { getChannel, repeatingCheckUsers } = require('./utils/repeatingChecker');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -49,3 +50,6 @@ client.once(Events.ClientReady, c => {
 
 //make sure this line is the last line
 client.login(process.env.CLIENT_TOKEN); //login bot using token
+
+const channel = getChannel(client);
+repeatingCheckUsers(client, channel, 30);

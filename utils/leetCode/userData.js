@@ -18,7 +18,7 @@ async function generateUserProfile(user) {
     try {
         let statsData = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
         let statsJson = await statsData.json();
-        let profile = `<svg xmlns="http://www.w3.org/2000/svg" width="301" height="195" viewBox="0 0 301 195" fill="none">
+        let profile = `<svg xmlns="http://www.w3.org/2000/svg" width="330" height="195" viewBox="0 0 330 195" fill="none">
         <style>
           .header {
               font: 600 18px &apos;Segoe UI&apos;, Ubuntu, Sans-Serif;
@@ -48,7 +48,7 @@ async function generateUserProfile(user) {
             }
 
         </style>
-        <rect x="0.5" y="0.5" rx="4.5" height="99%" stroke="#121212" width="301" fill="#121212" stroke-opacity="1"/>
+        <rect x="0.5" y="0.5" rx="4.5" height="99%" stroke="#121212" width="330" fill="#121212" stroke-opacity="1"/>
         <g transform="translate(25, 35)">
           <g transform="translate(0, 0)">
             <text x="0" y="0" class="header">${user}&apos;s LeetCode Stats</text>
