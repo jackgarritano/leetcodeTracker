@@ -8,6 +8,7 @@ async function getChannel(client){
 async function repeatingCheckUsers(client, channel, increment){
     setInterval(async () =>{
         let finishedProblems = await checkUsers();
+        console.log('finishedProblems: ' + JSON.stringify(finishedProblems));
         if(Object.keys(finishedProblems).length > 0){
             const guild = client.guilds.cache.get('1106428718857068604'); // replace with your guild ID
             await guild.members.fetch();
@@ -15,7 +16,8 @@ async function repeatingCheckUsers(client, channel, increment){
             for (const [, cachedUser] of guild.members.cache) {
                 if (cachedUser.user.tag in finishedProblems) {
                     channel.send(`<@${cachedUser.id}> did ${finishedProblems[cachedUser.user.tag]}`);
-                    await initUser(cachedUser.user.tag);
+                    let returnMessage = await initUser(cachedUser.user.tag);
+                    console.log(returnMessage);
                 }
             }
         }

@@ -22,8 +22,10 @@ async function checkUserExistence(discordTag){
 async function initUser(discordTag, lcUser) {
     if(!lcUser){
         lcUser = await checkUserExistence(discordTag);
+        console.log('inside if statement, lcUser is: ' + lcUser);
     }
     const userData = await fetchUserData(lcUser);
+    console.log('user data: ' + JSON.stringify(userData));
     if (userData.status == 'error') {
         throw new Error(userData.message);
     }

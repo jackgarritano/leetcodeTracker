@@ -2,23 +2,94 @@ const fetch = require('node-fetch');
 const sharp = require('sharp');
 const fs = require('fs');
 
-async function fetchUserData(user) {
-    try {
-        let statsData = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
-        let statsJson = await statsData.json();
-        return statsJson;
+async function fetchUserData(username) {
+  try {
+    const query = `query getUserProfile($username: String!) { 
+          allQuestionsCount { 
+            difficulty count 
+          } 
+          matchedUser(username: $username) { 
+            contributions { 
+              points 
+            } 
+            profile { 
+              reputation ranking 
+            } 
+            submissionCalendar 
+            submitStats { 
+              acSubmissionNum { 
+                difficulty count submissions 
+              } 
+              totalSubmissionNum { 
+                difficulty count submissions 
+              } 
+            } 
+          } 
+        }`;
+
+    const data = {
+      query,
+      variables: {username},
+    };
+
+    const statsData = await fetch('https://leetcode.com/graphql/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Referer': `https://leetcode.com/${username}/`,
+      },
+      body: JSON.stringify(data),
+    })
+    let statsJson = await statsData.json();
+    if('errors' in statsJson){
+      return {status: 'error', message: statsJson['errors'][0].message}
     }
-    catch (e) {
-        console.log(`fetch data error: ${e}`);
-        return { status: 'error', message: e };
+    else{
+        totalSolved = statsJson.data.matchedUser.submitStats.acSubmissionNum.find(item => item.difficulty === 'All').count;
+        totalQuestions = statsJson.data.allQuestionsCount.find(item => item.difficulty === 'All').count;
+        easySolved = statsJson.data.matchedUser.submitStats.acSubmissionNum.find(item => item.difficulty === 'Easy').count;
+        totalEasy = statsJson.data.allQuestionsCount.find(item => item.difficulty === 'Easy').count;
+        mediumSolved = statsJson.data.matchedUser.submitStats.acSubmissionNum.find(item => item.difficulty === 'Medium').count;
+        totalMedium = statsJson.data.allQuestionsCount.find(item => item.difficulty === 'Medium').count;
+        hardSolved = statsJson.data.matchedUser.submitStats.acSubmissionNum.find(item => item.difficulty === 'Hard').count;
+        totalHard = statsJson.data.allQuestionsCount.find(item => item.difficulty === 'Hard').count;
+        ranking = statsJson.data.matchedUser.profile.ranking;
+      return{
+        status: 'success',
+        totalSolved,
+        totalQuestions,
+        easySolved,
+        totalEasy,
+        mediumSolved,
+        totalMedium,
+        hardSolved,
+        totalHard,
+        ranking,
+      }
     }
+  }
+  catch (e) {
+    return {status: 'error', message: e};
+  }
 }
 
+/*async function fetchUserData(user) {
+  try {
+    //let statsData = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
+
+    return statsJson;
+  }
+  catch (e) {
+    console.log(`fetch data error: ${e}`);
+    return { status: 'error', message: e };
+  }
+}*/
+
 async function generateUserProfile(user) {
-    try {
-        let statsData = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
-        let statsJson = await statsData.json();
-        let profile = `<svg xmlns="http://www.w3.org/2000/svg" width="330" height="195" viewBox="0 0 330 195" fill="none">
+  try {
+    let statsData = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
+    let statsJson = await statsData.json();
+    let profile = `<svg xmlns="http://www.w3.org/2000/svg" width="330" height="195" viewBox="0 0 330 195" fill="none">
         <style>
           .header {
               font: 600 18px &apos;Segoe UI&apos;, Ubuntu, Sans-Serif;
@@ -90,38 +161,20 @@ async function generateUserProfile(user) {
         </g>
       </svg>
       `
-        imageBuffer = await sharp(Buffer.from(profile))
-            .resize(1000)
-            .png()
-            .toBuffer()
-        return imageBuffer;
-    }
-    catch (e) {
-        console.log(`generate profile error: ${e}`);
-        return 'error';
-    }
+    imageBuffer = await sharp(Buffer.from(profile))
+      .resize(1000)
+      .png()
+      .toBuffer()
+    return imageBuffer;
+  }
+  catch (e) {
+    console.log(`generate profile error: ${e}`);
+    return 'error';
+  }
 }
 
-/*async function testSharp(user){
-    
-    let svg = await generateUserProfile(user);
-
-    sharp(Buffer.from(svg))
-    .resize(1000)
-    .png()
-    .toBuffer()
-    .then(data => {
-        // Write the PNG data to a file
-        fs.writeFile('output.png', data, (err) => {
-        if (err) throw err;
-        console.log('The file has been saved!');
-        });
-    })
-    .catch(err => console.error(err));
-}
-
-testSharp('jackgar');*/
-
-generateUserProfile('jackgar');
+/*leetcodeReq('gangugangu').then((data)=>{
+  console.log(JSON.stringify(data));
+})*/
 
 module.exports = { fetchUserData, generateUserProfile };
