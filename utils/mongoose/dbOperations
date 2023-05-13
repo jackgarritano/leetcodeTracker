@@ -45,11 +45,14 @@ async function initUser(discordTag, lcUser) {
 async function checkUsers() {
     finishedProblems = {};
     allDocs = await UsersModel.find();
-    allDocs.forEach(async (doc) => {
+    await Promise.all(allDocs.map(async (doc) => {
         currentData = await fetchUserData(doc.user);
         easyFinished = currentData.easySolved - doc.easy;
         medFinished = currentData.mediumSolved - doc.med;
         hardFinished = currentData.hardSolved - doc.hard;
+        if(easyFinished > 0 || medFinished > 0 || hardFinished > 0){
+            finishedProblems[doc.tag] = finishedProblems[doc.tag] || '';
+        }
         if (easyFinished > 0) {
             finishedProblems[doc.tag] = `${easyFinished} easy problem`;
             if (easyFinished > 1) {
@@ -80,7 +83,7 @@ async function checkUsers() {
                 finishedProblems[doc.tag] += 's';
             }
         }
-    })
+    }))
     return finishedProblems;
 }
 

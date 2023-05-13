@@ -8,11 +8,11 @@ function getChannel(client){
 
 async function repeatingCheckUsers(client, channel, increment){
     setInterval(async () =>{
-        console.log('next check started');
         let finishedProblems = await checkUsers();
+        console.log('finishedProblems in repeating: ' + JSON.stringify(finishedProblems));
         if(finishedProblems.length > 0){
             for (const [, cachedUser] of client.users.cache) {
-                console.log(`tag: ${cachedUser.tag}`);
+                console.log('cachedUser tag: ' + cachedUser.tag);
                 if (cachedUser.tag in finishedProblems) {
                     channel.send(`<@${cachedUser.id}> did ${finishedProblems[cachedUser.tag]}`);
                 }

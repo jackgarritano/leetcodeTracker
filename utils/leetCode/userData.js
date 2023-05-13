@@ -76,7 +76,7 @@ async function generateUserProfile(user) {
             </g>
             <g transform="translate(0, 75)">
               <g transform="translate(25, 0)">
-                <text class="stat bold medium" y="12.5">Medium Questions Solved:</text>
+                <text class="stat bold medium" y="12.5">Med Questions Solved:</text>
                 <text class="stat medium" x="200" y="12.5">${statsJson.mediumSolved}/${statsJson.totalMedium}</text>
               </g>
             </g>
