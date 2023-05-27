@@ -50,13 +50,13 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}. (5/27/2003 version)`);
+	console.log(`Ready! Logged in as ${c.user.tag}. (5/27/2003 multi-server version)`);
 });
 
 //make sure this line is the last line
 client.login(process.env.CLIENT_TOKEN).then(()=>{
-	getChannel(client).then((channel) =>{
-	repeatingCheckUsers(client, channel, 30);
+	getChannel(client).then((channels) =>{
+	repeatingCheckUsers(client, channels, 30);
 })
 })
 
