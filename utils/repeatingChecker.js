@@ -15,8 +15,8 @@ async function repeatingCheckUsers(client, channels, increment){
         let finishedProblems = await checkUsers();
         console.log('finishedProblems: ' + JSON.stringify(finishedProblems));
         if(Object.keys(finishedProblems).length > 1){
-            for(let i=0; i<finishedProblems[servers].length; i++){
-                const guildId = finishedProblems[servers][i];
+            for(let i=0; i<finishedProblems['servers'].length; i++){
+                const guildId = finishedProblems['servers'][i];
                 const guild = client.guilds.cache.get(guildId);
                 const channel = channels[guildId];
                 await guild.members.fetch();

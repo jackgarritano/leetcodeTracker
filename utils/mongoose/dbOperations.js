@@ -41,7 +41,7 @@ async function initUser(discordTag, guildId, lcUser) {
     
     const update = {
         $set: doc,
-        $addtoset: { needsUpdates: toUpdate }
+        $addToSet: { needsUpdates: toUpdate }
     };
     
     try {
@@ -98,7 +98,7 @@ async function checkUsers() {
             }
         }
         if (doc.tag in finishedProblems){
-            finishedProblems[servers].push.apply(finishedProblems[servers], doc.needsUpdates);
+            finishedProblems['servers'].push.apply(finishedProblems['servers'], doc.needsUpdates);
         }
         
     }))
