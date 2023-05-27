@@ -52,40 +52,42 @@ async function checkUsers() {
     allDocs = await UsersModel.find();
     await Promise.all(allDocs.map(async (doc) => {
         currentData = await fetchUserData(doc.user);
-        easyFinished = currentData.easySolved - doc.easy;
-        medFinished = currentData.mediumSolved - doc.med;
-        hardFinished = currentData.hardSolved - doc.hard;
-        if(easyFinished > 0 || medFinished > 0 || hardFinished > 0){
-            finishedProblems[doc.tag] = finishedProblems[doc.tag] || '';
-        }
-        if (easyFinished > 0) {
-            finishedProblems[doc.tag] = `${easyFinished} easy problem`;
-            if (easyFinished > 1) {
-                finishedProblems[doc.tag] += 's';
+        if(currentData.needsUpdates){
+            easyFinished = currentData.easySolved - doc.easy;
+            medFinished = currentData.mediumSolved - doc.med;
+            hardFinished = currentData.hardSolved - doc.hard;
+            if(easyFinished > 0 || medFinished > 0 || hardFinished > 0){
+                finishedProblems[doc.tag] = finishedProblems[doc.tag] || '';
             }
-        }
-        if (medFinished > 0) {
-            if (finishedProblems[doc.tag].length > 0) {
-                finishedProblems[doc.tag] += ', ';
+            if (easyFinished > 0) {
+                finishedProblems[doc.tag] = `${easyFinished} easy problem`;
+                if (easyFinished > 1) {
+                    finishedProblems[doc.tag] += 's';
+                }
             }
-            else {
-                finishedProblems[doc.tag] = '';
+            if (medFinished > 0) {
+                if (finishedProblems[doc.tag].length > 0) {
+                    finishedProblems[doc.tag] += ', ';
+                }
+                else {
+                    finishedProblems[doc.tag] = '';
+                }
+                finishedProblems[doc.tag] += `${medFinished} medium problem`;
+                if (medFinished > 1) {
+                    finishedProblems[doc.tag] += 's';
+                }
             }
-            finishedProblems[doc.tag] += `${medFinished} medium problem`;
-            if (medFinished > 1) {
-                finishedProblems[doc.tag] += 's';
-            }
-        }
-        if (hardFinished > 0) {
-            if (finishedProblems[doc.tag].length > 0) {
-                finishedProblems[doc.tag] += ', ';
-            }
-            else {
-                finishedProblems[doc.tag] = '';
-            }
-            finishedProblems[doc.tag] += `${hardFinished} hard problem`;
-            if (hardFinished > 1) {
-                finishedProblems[doc.tag] += 's';
+            if (hardFinished > 0) {
+                if (finishedProblems[doc.tag].length > 0) {
+                    finishedProblems[doc.tag] += ', ';
+                }
+                else {
+                    finishedProblems[doc.tag] = '';
+                }
+                finishedProblems[doc.tag] += `${hardFinished} hard problem`;
+                if (hardFinished > 1) {
+                    finishedProblems[doc.tag] += 's';
+                }
             }
         }
     }))
