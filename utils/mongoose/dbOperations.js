@@ -20,7 +20,7 @@ async function checkUserExistence(discordTag){
 }
 
 async function initUser(discordTag, guildId, lcUser) {
-    let toUpdate = (guildId == process.env.GUILD_ID);
+    let toUpdate = guildId;
     if(!lcUser){
         lcUser = await checkUserExistence(discordTag);
         console.log('inside if statement, lcUser is: ' + lcUser);
@@ -37,11 +37,15 @@ async function initUser(discordTag, guildId, lcUser) {
         easy: userData.easySolved,
         med: userData.mediumSolved,
         hard: userData.hardSolved,
-        needsUpdates: toUpdate,
-    }
-
+    };
+    
+    const update = {
+        $set: doc,
+        $push: { needsUpdates: toUpdate }
+    };
+    
     try {
-        await UsersModel.findOneAndUpdate({ tag: discordTag }, doc, { new: true, upsert: true });
+        await UsersModel.findOneAndUpdate({ tag: discordTag }, update, { new: true, upsert: true });
         return `User successfully updated to ${lcUser}`;
     }
     catch (e) {

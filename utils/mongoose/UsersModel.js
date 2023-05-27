@@ -9,6 +9,7 @@ const trackerSchema = new Schema({
   easy: Number,
   med: Number,
   hard: Number,
+  needsUpdates: [String],
 });
 
 module.exports = mongoose.model("UsersModel", trackerSchema);
