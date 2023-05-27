@@ -19,7 +19,7 @@ async function checkUserExistence(discordTag){
     return doc.user;
 }
 
-async function initUser(discordTag, lcUser, guildId) {
+async function initUser(discordTag, guildId, lcUser) {
     let toUpdate = (guildId == process.env.GUILD_ID);
     if(!lcUser){
         lcUser = await checkUserExistence(discordTag);
