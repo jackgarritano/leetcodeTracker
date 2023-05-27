@@ -41,7 +41,7 @@ async function initUser(discordTag, guildId, lcUser) {
     
     const update = {
         $set: doc,
-        $push: { needsUpdates: toUpdate }
+        $addtoset: { needsUpdates: toUpdate }
     };
     
     try {
