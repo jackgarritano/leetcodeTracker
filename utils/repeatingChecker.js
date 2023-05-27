@@ -2,15 +2,20 @@ const { initUser, checkUsers } = require('./mongoose/dbOperations');
 require('dotenv').config();
 
 async function getChannel(client){
-    const channel = await client.channels.fetch('1106428718857068607');
-    return channel;
+    const channel1 = await client.channels.fetch('1106428718857068607');
+    const channel2 = await client.channels.fetch('1076408499002687522');
+    return {
+        '1106428718857068604': channel1,
+        '1074155409067221083': channel2,
+    };
 }
 
-async function repeatingCheckUsers(client, channel, increment){
+async function repeatingCheckUsers(client, channels, increment){
     setInterval(async () =>{
         let finishedProblems = await checkUsers();
         console.log('finishedProblems: ' + JSON.stringify(finishedProblems));
-        if(Object.keys(finishedProblems).length > 0){
+        if(Object.keys(finishedProblems).length > 1){
+            
             const guild = client.guilds.cache.get(process.env.GUILD_ID);
             await guild.members.fetch();
 

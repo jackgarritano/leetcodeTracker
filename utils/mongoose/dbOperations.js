@@ -55,7 +55,7 @@ async function initUser(discordTag, guildId, lcUser) {
 
 async function checkUsers() {
     finishedProblems = {
-        servers: {},
+        servers: [],
     };
     allDocs = await UsersModel.find();
     await Promise.all(allDocs.map(async (doc) => {
@@ -98,7 +98,7 @@ async function checkUsers() {
             }
         }
         if (doc.tag in finishedProblems){
-            finishedProblems[servers][doc.tag] = doc.needsUpdates;
+            finishedProblems[servers].push.apply(finishedProblems[servers], doc.needsUpdates);
         }
         
     }))
