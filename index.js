@@ -50,7 +50,7 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}. (5/27/2003 multi-server version)`);
+	console.log(`Ready! Logged in as ${c.user.tag}. (6/18/2023 new usernames version)`);
 });
 
 //make sure this line is the last line

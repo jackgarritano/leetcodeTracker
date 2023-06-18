@@ -87,8 +87,9 @@ async function fetchUserData(username) {
 
 async function generateUserProfile(user) {
   try {
-    let statsData = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
-    let statsJson = await statsData.json();
+    //let statsData = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
+    //let statsJson = await statsData.json();
+    let statsJson = await fetchUserData(user);
     let profile = `<svg xmlns="http://www.w3.org/2000/svg" width="330" height="195" viewBox="0 0 330 195" fill="none">
         <style>
           .header {
