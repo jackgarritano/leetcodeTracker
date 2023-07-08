@@ -11,11 +11,12 @@ module.exports = {
                 .setRequired(true)),
 	async execute(interaction) {
         const usertag = interaction.user.tag;
+        const userId = interaction.user.id;
         const username = interaction.options.getString('username');
         const guildId = interaction.guildId;
         console.log(`username: ${username}`);
         try{
-            replyStr = await initUser(usertag, guildId, username);
+            replyStr = await initUser(usertag, userId, guildId, username);
             await interaction.reply(replyStr);
         }
         catch(e){

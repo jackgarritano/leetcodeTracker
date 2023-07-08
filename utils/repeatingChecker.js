@@ -20,11 +20,10 @@ async function repeatingCheckUsers(client, channels, increment){
                 const guild = client.guilds.cache.get(guildId);
                 const channel = channels[guildId];
                 await guild.members.fetch();
-
                 for (const [, cachedUser] of guild.members.cache) {
-                    if (cachedUser.user.tag in finishedProblems) {
-                        channel.send(`<@${cachedUser.id}> did ${finishedProblems[cachedUser.user.tag]}`);
-                        let returnMessage = await initUser(cachedUser.user.tag, process.env.GUILD_ID);
+                    if (cachedUser.id in finishedProblems) {
+                        channel.send(`<@${cachedUser.id}> did ${finishedProblems[cachedUser.id]}`);
+                        let returnMessage = await initUser(cachedUser.user.tag, cachedUser.id, process.env.GUILD_ID);
                         console.log(returnMessage);
                     }
                 }

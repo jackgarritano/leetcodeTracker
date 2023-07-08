@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const trackerSchema = new Schema({
   tag: String,
   user: String,
+  discordId: String,
   easy: Number,
   med: Number,
   hard: Number,
