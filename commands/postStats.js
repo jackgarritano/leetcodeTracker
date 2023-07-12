@@ -12,10 +12,10 @@ module.exports = {
     async execute(interaction){
         let targetUser;
             if(interaction.options.getUser('target')){
-                targetUser = interaction.options.getUser('target').tag;
+                targetUser = interaction.options.getUser('target').id;
             }
             else{
-                targetUser = interaction.user.tag;
+                targetUser = interaction.user.id;
             }
         try{
             const username = await checkUserExistence(targetUser);
